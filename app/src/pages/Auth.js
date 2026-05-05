@@ -1,0 +1,24 @@
+import{useState}from'react';import{useNavigate,useSearchParams}from'react-router-dom';import{useAuth}from'../context/AuthContext';import toast from'react-hot-toast';import{Eye,EyeOff,ArrowLeft}from'lucide-react';import{Logo}from'../components/AppShell';
+export default function Auth(){
+  const[p]=useSearchParams();const[signup,setSignup]=useState(p.get('s')==='1');const[loading,setLoading]=useState(false);const[show,setShow]=useState(false);const[f,setF]=useState({name:'',email:'',password:'',background:'',goal:'',city:''});const{login}=useAuth();const nav=useNavigate();const set=(k,v)=>setF(x=>({...x,[k]:v}));
+  const submit=async e=>{e.preventDefault();setLoading(true);try{const res=await fetch(signup?'/api/auth/register':'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(signup?f:{email:f.email,password:f.password})});const data=await res.json();if(!res.ok)throw new Error(data.error);login(data.token,data.user);toast.success(signup?'Welcome, '+data.user.name+'! 🎉':'Welcome back!');nav('/dashboard');}catch(err){toast.error(err.message);}finally{setLoading(false);}};
+  return<div style={{minHeight:'100vh',background:'var(--cream)',display:'flex',alignItems:'center',justifyContent:'center',padding:24,position:'relative',overflow:'hidden'}}>
+    <div style={{position:'absolute',width:500,height:500,borderRadius:'50%',background:'radial-gradient(circle,rgba(43,158,150,0.07),transparent 70%)',top:'-15%',right:'-10%',pointerEvents:'none'}}/>
+    <div style={{position:'absolute',width:400,height:400,borderRadius:'50%',background:'radial-gradient(circle,rgba(232,96,26,0.05),transparent 70%)',bottom:'0',left:'-10%',pointerEvents:'none'}}/>
+    <div style={{width:'100%',maxWidth:460,position:'relative'}}>
+      <button className="btn btn-outline btn-sm" onClick={()=>window.location.href='/'} style={{marginBottom:24,fontSize:13}}><ArrowLeft size={13}/>Back to home</button>
+      <div className="card" style={{padding:36,boxShadow:'0 8px 40px rgba(0,0,0,0.08)'}}>
+        <div style={{textAlign:'center',marginBottom:28}}><div style={{display:'flex',justifyContent:'center',marginBottom:14}}><Logo size={44}/></div><h1 style={{fontSize:22,fontWeight:900,marginBottom:4,letterSpacing:'-.03em'}}>{signup?'Create your account':'Welcome back'}</h1><p style={{color:'var(--muted)',fontSize:14}}>{signup?'Your AI career navigator starts here.':'Continue your journey.'}</p></div>
+        <form onSubmit={submit} style={{display:'flex',flexDirection:'column',gap:14}}>
+          {signup&&<div><label className="lbl">Full Name</label><input className="inp" placeholder="Your full name" value={f.name} onChange={e=>set('name',e.target.value)} required/></div>}
+          <div><label className="lbl">Email</label><input className="inp" type="email" placeholder="you@example.com" value={f.email} onChange={e=>set('email',e.target.value)} required/></div>
+          <div><label className="lbl">Password</label><div style={{position:'relative'}}><input className="inp" type={show?'text':'password'} placeholder="Min 6 characters" value={f.password} onChange={e=>set('password',e.target.value)} required style={{paddingRight:42}}/><button type="button" onClick={()=>setShow(v=>!v)} style={{position:'absolute',right:12,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',color:'var(--muted2)',cursor:'pointer'}}>{show?<EyeOff size={15}/>:<Eye size={15}/>}</button></div></div>
+          {signup&&<><div><label className="lbl">Background <span style={{color:'var(--muted2)',fontWeight:400}}>(optional)</span></label><input className="inp" placeholder="2nd year B.Com, Jaipur" value={f.background} onChange={e=>set('background',e.target.value)}/></div><div><label className="lbl">Career Goal <span style={{color:'var(--muted2)',fontWeight:400}}>(optional)</span></label><input className="inp" placeholder="Data Analyst at a startup" value={f.goal} onChange={e=>set('goal',e.target.value)}/></div><div><label className="lbl">City <span style={{color:'var(--muted2)',fontWeight:400}}>(optional)</span></label><input className="inp" placeholder="Jaipur" value={f.city} onChange={e=>set('city',e.target.value)}/></div></>}
+          <button className="btn btn-orange" type="submit" disabled={loading} style={{width:'100%',justifyContent:'center',padding:13,marginTop:4,fontSize:15}}>{loading?<><div className="spinner" style={{borderTopColor:'white'}}/>Processing...</>:signup?'Create Account':'Sign In'}</button>
+        </form>
+        <div className="div"/>
+        <p style={{textAlign:'center',color:'var(--muted)',fontSize:14}}>{signup?'Already have an account? ':'No account? '}<button onClick={()=>setSignup(v=>!v)} style={{color:'var(--teal)',background:'none',border:'none',cursor:'pointer',fontWeight:900,fontFamily:'Cabinet Grotesk,system-ui',fontSize:14}}>{signup?'Sign In':'Sign Up Free'}</button></p>
+      </div>
+    </div>
+  </div>;
+}
