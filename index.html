@@ -5,400 +5,308 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>MARGDARSHAK — India's AI Career Navigator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-:root{
-  --ink:#0A0A08;--ink2:#1C1C18;--cream:#F7F4EE;--cream2:#EDE9DF;
-  --teal:#2B9E96;--teal2:#1E7A74;--orange:#E8601A;--orange2:#BF4E14;
-  --green:#4A9E3A;--muted:#6B6560;--border:#DDD9D0;
-  --white:#FFFFFF;
-}
+:root{--w:#FFFFFF;--off:#FAFAF9;--off2:#F4F3F0;--ink:#0D0D0B;--ink2:#1A1A17;--mid:#6B6860;--light:#B8B5AF;--bdr:#E8E6E1;--bdr2:#D4D1CB;--teal:#1E7A74;--tl:#2B9E96;--txl:rgba(43,158,150,0.08);--org:#C85A0F;--ol:#E8601A;--oxl:rgba(200,90,15,0.07)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;overflow-x:hidden}
-body{background:var(--ink);color:var(--cream);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{background:var(--w);color:var(--ink);font-family:'Bricolage Grotesque',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;cursor:none}
+::selection{background:rgba(43,158,150,0.13)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:10px}
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar{width:2px}
-::-webkit-scrollbar-thumb{background:var(--teal)}
+/* CURSOR */
+#cur{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--ink);pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s;mix-blend-mode:multiply}
+#cur-r{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(13,13,11,0.22);pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .32s cubic-bezier(.34,1.56,.64,1),height .32s cubic-bezier(.34,1.56,.64,1),border-color .25s}
+body:has(a:hover) #cur,body:has(button:hover) #cur{width:14px;height:14px;background:var(--teal)}
+body:has(a:hover) #cur-r,body:has(button:hover) #cur-r{width:50px;height:50px;border-color:rgba(43,158,150,0.3)}
+@keyframes rayExpand{from{r:0;opacity:.5;stroke-width:2}to{r:54;opacity:0;stroke-width:.5}}
+@keyframes rayLine{from{stroke-dashoffset:0;opacity:.65}to{stroke-dashoffset:-65;opacity:0}}
 
-/* ── Canvas background ── */
-#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.84);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-bottom:1px solid rgba(232,230,225,0.5);transition:border-color .3s}
+.nl{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;letter-spacing:-.02em;color:var(--ink);text-decoration:none}
+.nlm{width:28px;height:28px;background:var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nlinks{display:flex;align-items:center;gap:30px}
+.nlinks a{font-size:13.5px;font-weight:500;color:var(--mid);text-decoration:none;letter-spacing:-.01em;transition:color .2s}
+.nlinks a:hover{color:var(--ink)}
+.ncta{display:flex;gap:10px}
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:20px 6vw;display:flex;align-items:center;justify-content:space-between;mix-blend-mode:normal}
-nav::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,8,0.9),transparent);backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);pointer-events:none}
-.nav-logo{position:relative;display:flex;align-items:center;gap:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--cream);text-decoration:none;z-index:1}
-.nav-logo span{color:var(--orange)}
-.nav-cta{position:relative;z-index:1;display:flex;gap:12px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:100px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;outline:none;transition:all .22s cubic-bezier(.34,1.56,.64,1);text-decoration:none;letter-spacing:.01em}
-.btn-ghost{background:rgba(247,244,238,0.08);color:var(--cream);border:1px solid rgba(247,244,238,0.15)}
-.btn-ghost:hover{background:rgba(247,244,238,0.14);transform:translateY(-1px)}
-.btn-primary{background:var(--teal);color:white}
-.btn-primary:hover{background:var(--teal2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(43,158,150,0.4)}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;letter-spacing:-.01em;border-radius:100px;border:none;outline:none;cursor:none;text-decoration:none;transition:all .22s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+.btn-sm{padding:8px 18px;font-size:13px}
+.btn-md{padding:11px 24px;font-size:14px}
+.btn-lg{padding:15px 32px;font-size:15px}
+.btn-g{background:transparent;color:var(--mid);border:1px solid var(--bdr2)}
+.btn-g:hover{background:var(--off2);color:var(--ink);transform:translateY(-1px)}
+.btn-d{background:var(--ink);color:white;box-shadow:0 2px 12px rgba(13,13,11,0.16)}
+.btn-d:hover{background:var(--ink2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,13,11,0.2)}
+.btn-t{background:var(--teal);color:white;box-shadow:0 2px 10px rgba(30,122,116,0.22)}
+.btn-t:hover{background:var(--tl);transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,122,116,0.28)}
 
-/* ── HERO ── */
-#hero{position:relative;z-index:10;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 5vw 80px;overflow:hidden}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:32px;opacity:0;transform:translateY(20px);animation:fadeUp .8s .2s ease forwards}
-.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:32px;height:1px;background:var(--teal)}
-h1{font-family:'Syne',sans-serif;font-size:clamp(48px,8vw,96px);font-weight:800;line-height:.95;letter-spacing:-.04em;margin-bottom:32px;opacity:0;transform:translateY(30px);animation:fadeUp .9s .35s ease forwards}
-h1 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--teal);font-weight:400}
-h1 .line-orange{color:var(--orange)}
-.hero-sub{max-width:560px;margin:0 auto 48px;font-size:18px;line-height:1.7;color:rgba(247,244,238,0.6);opacity:0;transform:translateY(20px);animation:fadeUp .8s .5s ease forwards}
-.hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;transform:translateY(20px);animation:fadeUp .8s .65s ease forwards}
-.btn-hero{padding:15px 34px;font-size:15px;border-radius:100px}
-.btn-hero-ghost{background:transparent;color:var(--cream);border:1.5px solid rgba(247,244,238,0.25);padding:14px 32px;font-size:15px}
-.btn-hero-ghost:hover{border-color:var(--cream);background:rgba(247,244,238,0.06);transform:translateY(-2px)}
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 5vw 80px;position:relative;overflow:hidden;background:var(--w)}
+#hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(13,13,11,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(13,13,11,0.025) 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%)}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none}
+.o1{width:480px;height:480px;background:rgba(43,158,150,0.065);top:-100px;right:-80px}
+.o2{width:380px;height:380px;background:rgba(200,90,15,0.055);bottom:-60px;left:-60px}
 
-/* ── 3D Compass ── */
-#compass-wrap{position:relative;width:340px;height:340px;margin:60px auto 0;opacity:0;transform:translateY(40px) scale(.9);animation:compassIn 1s .8s cubic-bezier(.34,1.56,.64,1) forwards}
-.compass-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(43,158,150,0.25);animation:compassSpin 28s linear infinite}
-.compass-ring-2{position:absolute;inset:16px;border-radius:50%;border:1px solid rgba(232,96,26,0.15);animation:compassSpin 18s linear infinite reverse}
-.compass-ring-3{position:absolute;inset:36px;border-radius:50%;border:1px dashed rgba(247,244,238,0.08);animation:compassSpin 40s linear infinite}
-.compass-center{position:absolute;inset:60px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(43,158,150,0.18),rgba(10,10,8,0.9));border:1px solid rgba(43,158,150,0.3);display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px rgba(43,158,150,0.15),inset 0 0 40px rgba(43,158,150,0.06)}
-.compass-needle{width:4px;height:80px;position:relative;animation:needleFloat 3s ease-in-out infinite}
-.needle-n{background:linear-gradient(to top,transparent,var(--teal));border-radius:100px 100px 0 0;height:44px}
-.needle-s{background:linear-gradient(to bottom,transparent,var(--orange));border-radius:0 0 100px 100px;height:36px}
-.compass-tick{position:absolute;top:50%;left:50%;width:100%;height:1px}
-.compass-tick::before{content:'';position:absolute;right:8px;top:-2px;width:10px;height:4px;background:rgba(247,244,238,0.15);border-radius:2px}
-.scroll-hint{margin-top:30px;font-size:12px;color:rgba(247,244,238,0.3);letter-spacing:.15em;text-transform:uppercase;opacity:0;animation:fadeUp .8s 1.6s ease forwards;display:flex;flex-direction:column;align-items:center;gap:10px}
-.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--teal),transparent);animation:scrollLine 2s ease-in-out infinite}
+.htag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--teal);background:var(--txl);border:1px solid rgba(43,158,150,0.16);padding:6px 14px;border-radius:100px;margin-bottom:34px;opacity:0;animation:fu .7s .1s ease forwards}
+.hdot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:bl 2s ease-in-out infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
 
-/* ── SECTIONS ── */
-section{position:relative;z-index:10}
+h1{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(42px,7.5vw,86px);font-weight:800;line-height:.94;letter-spacing:-.05em;color:var(--ink);margin-bottom:26px;opacity:0;animation:fu .8s .25s ease forwards}
+h1 em{font-family:'Lora',Georgia,serif;font-style:italic;font-weight:500;color:var(--teal);letter-spacing:-.03em}
+h1 .wa{color:var(--org)}
+.hsub{max-width:500px;margin:0 auto 42px;font-size:17px;line-height:1.72;font-weight:400;color:var(--mid);opacity:0;animation:fu .7s .4s ease forwards}
+.hbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fu .7s .55s ease forwards;margin-bottom:64px}
 
-/* ── ABOUT / STATS ── */
-#stats{padding:120px 6vw;background:var(--cream);color:var(--ink)}
-.section-label{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:24px}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-top:60px}
-.stat-box{background:var(--white);padding:36px 28px;text-align:center}
-.stat-num{font-family:'Syne',sans-serif;font-size:clamp(36px,4vw,52px);font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:1}
-.stat-num span{color:var(--teal)}
-.stat-label{font-size:13px;color:var(--muted);margin-top:8px;font-weight:500}
+/* COMPASS */
+#cw{position:relative;width:290px;height:290px;margin:0 auto;opacity:0;animation:fu .9s .7s cubic-bezier(.34,1.56,.64,1) forwards}
+.cr{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(13,13,11,0.07);animation:sp 32s linear infinite}
+.cr2{inset:20px;border-color:rgba(43,158,150,0.1);border-style:dashed;animation:sp 22s linear infinite reverse}
+.cr3{inset:44px;border-color:rgba(200,90,15,0.07);animation:sp 48s linear infinite}
+.cf{position:absolute;inset:66px;border-radius:50%;background:var(--w);border:1px solid var(--bdr);box-shadow:0 8px 40px rgba(13,13,11,0.07),0 2px 8px rgba(13,13,11,0.04);display:flex;align-items:center;justify-content:center}
+.cn{display:flex;flex-direction:column;align-items:center;animation:nw 4s ease-in-out infinite;transform-origin:center bottom}
+.cnn{width:3px;height:38px;background:linear-gradient(to top,transparent,var(--teal));border-radius:10px 10px 0 0}
+.cnd{width:7px;height:7px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 2px white,0 0 0 3px var(--bdr);margin:-1px 0}
+.cns{width:3px;height:28px;background:linear-gradient(to bottom,transparent,var(--org));border-radius:0 0 10px 10px}
+.cc{position:absolute;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.04em}
+.cc-n{top:70px;left:50%;transform:translateX(-50%);color:var(--teal)}
+.cc-s{bottom:70px;left:50%;transform:translateX(-50%);color:var(--light)}
+.cc-e{right:73px;top:50%;transform:translateY(-50%);color:var(--light)}
+.cc-w{left:73px;top:50%;transform:translateY(-50%);color:var(--light)}
+.ct{position:absolute;top:50%;left:50%;width:100%;height:1px;transform-origin:left center}
+.ct::after{content:'';position:absolute;right:6px;top:-2.5px;width:8px;height:5px;border-radius:2px;background:rgba(13,13,11,0.055)}
+.si{margin-top:36px;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--light);opacity:0;animation:fu .7s 1.5s ease forwards}
+.sb{width:1px;height:44px;background:linear-gradient(to bottom,var(--bdr2),transparent)}
 
-/* ── FEATURES 3D SCROLL ── */
-#features{padding:120px 6vw;background:var(--ink)}
-.features-header{max-width:720px;margin:0 auto 80px;text-align:center}
-.features-header h2{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:20px}
-.features-header h2 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--teal);font-weight:400}
-.features-header p{color:rgba(247,244,238,0.5);font-size:17px;line-height:1.7}
+/* PROOF */
+#proof{padding:26px 5vw;border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);background:var(--off);display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap}
+.pi{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;color:var(--mid);letter-spacing:-.01em}
+.pn{font-family:'Lora',serif;font-size:18px;font-weight:500;font-style:italic;color:var(--teal)}
+.ps2{width:1px;height:18px;background:var(--bdr2)}
 
-/* 3D FEATURE CARDS */
-.features-track{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;perspective:1200px}
-.feat-card{background:rgba(247,244,238,0.03);border:1px solid rgba(247,244,238,0.06);border-radius:24px;padding:40px 32px;position:relative;overflow:hidden;cursor:default;transition:all .4s cubic-bezier(.34,1.56,.64,1);transform-style:preserve-3d}
-.feat-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(43,158,150,0.06),transparent 60%);opacity:0;transition:opacity .4s}
-.feat-card:hover{transform:translateY(-8px) rotateX(4deg) rotateY(-2deg);border-color:rgba(43,158,150,0.2);background:rgba(247,244,238,0.05)}
-.feat-card:hover::before{opacity:1}
-.feat-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;font-size:22px}
-.feat-card h3{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;letter-spacing:-.02em;margin-bottom:12px;color:var(--cream)}
-.feat-card p{font-size:14px;line-height:1.7;color:rgba(247,244,238,0.45)}
-.feat-tag{display:inline-block;margin-top:18px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:100px;border:1px solid;color:var(--teal);border-color:rgba(43,158,150,0.3)}
+/* SECTIONS */
+.sec{padding:108px 5vw}
+.si2{max-width:1100px;margin:0 auto}
+.ey{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:18px}
+.sh{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(29px,4vw,48px);font-weight:800;letter-spacing:-.04em;line-height:.97;color:var(--ink)}
+.sh em{font-family:'Lora',serif;font-style:italic;font-weight:500;color:var(--teal);letter-spacing:-.02em}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
 
-/* ── HOW IT WORKS ── */
-#how{padding:120px 6vw;background:var(--cream);color:var(--ink)}
-.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:60px}
-.how-steps{display:flex;flex-direction:column;gap:0}
-.how-step{display:flex;gap:24px;padding:28px 0;border-bottom:1px solid var(--border);position:relative;transition:all .3s}
-.how-step:last-child{border-bottom:none}
-.step-num{font-family:'Instrument Serif',serif;font-size:48px;font-weight:400;font-style:italic;color:var(--teal);line-height:1;flex-shrink:0;width:52px}
-.step-body h4{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:7px;letter-spacing:-.01em}
-.step-body p{font-size:14px;color:var(--muted);line-height:1.65}
+/* STATS */
+#stats{background:var(--off);border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bdr);border:1px solid var(--bdr);border-radius:22px;overflow:hidden;margin-top:52px}
+.sc{background:var(--w);padding:34px 26px}
+.sn{font-family:'Lora',serif;font-size:clamp(34px,3.5vw,50px);font-weight:500;font-style:italic;color:var(--ink);line-height:1;margin-bottom:8px}
+.sn b{color:var(--teal);font-style:normal;font-family:'Bricolage Grotesque',sans-serif;font-weight:800}
+.sl{font-size:13px;color:var(--mid);font-weight:500;line-height:1.5}
 
-/* 3D Phone mockup */
-.phone-wrap{perspective:1000px;display:flex;justify-content:center;align-items:center}
-.phone-3d{width:260px;height:520px;border-radius:36px;background:linear-gradient(145deg,var(--ink2),#0D0D0A);border:8px solid #2A2A26;position:relative;transform:rotateY(-12deg) rotateX(4deg);box-shadow:40px 60px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.04),inset 0 0 30px rgba(0,0,0,0.5);transition:transform .6s ease;animation:phoneBob 4s ease-in-out infinite}
-.phone-3d:hover{transform:rotateY(-6deg) rotateX(2deg) translateY(-8px)}
-.phone-screen{position:absolute;inset:4px;border-radius:30px;background:var(--ink);overflow:hidden;display:flex;flex-direction:column}
-.phone-status{height:28px;background:rgba(43,158,150,0.08);display:flex;align-items:center;justify-content:center;padding:0 16px}
-.phone-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:pulseDot 2s ease-in-out infinite}
-.phone-content{flex:1;padding:16px 14px;display:flex;flex-direction:column;gap:10px}
-.ph-card{background:rgba(247,244,238,0.04);border:1px solid rgba(247,244,238,0.07);border-radius:14px;padding:14px}
-.ph-bar{height:6px;border-radius:3px;background:rgba(247,244,238,0.08);overflow:hidden;margin-top:8px}
-.ph-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--teal),var(--orange))}
-.ph-label{font-size:10px;color:rgba(247,244,238,0.35);margin-bottom:4px}
-.ph-score{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--cream)}
+/* FEATURES */
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--bdr);border:1px solid var(--bdr);border-radius:22px;overflow:hidden;margin-top:52px}
+.fc{background:var(--w);padding:34px 28px;position:relative;overflow:hidden;transition:background .22s}
+.fc::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(43,158,150,0.05),transparent 55%);opacity:0;transition:opacity .35s}
+.fc:hover{background:var(--off)}.fc:hover::after{opacity:1}
+.fi{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:18px}
+.fc h3{font-size:15.5px;font-weight:700;letter-spacing:-.02em;margin-bottom:9px;color:var(--ink)}
+.fc p{font-size:13.5px;line-height:1.68;color:var(--mid);font-weight:400}
+.fp{display:inline-block;margin-top:14px;font-family:'DM Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px;border:1px solid var(--bdr2);color:var(--mid)}
 
-/* ── RECOGNITIONS ── */
-#recognitions{padding:100px 6vw;background:var(--ink2)}
-.rec-header{text-align:center;margin-bottom:60px}
-.rec-header h2{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
-.rec-header p{color:rgba(247,244,238,0.4);font-size:15px}
-.logos-row{display:flex;align-items:center;justify-content:center;gap:52px;flex-wrap:wrap;margin-bottom:52px}
-.logo-item{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:.55;filter:grayscale(1) brightness(2);transition:all .35s;cursor:default}
-.logo-item:hover{opacity:1;filter:grayscale(0) brightness(1)}
-.logo-img{height:52px;width:auto;object-fit:contain}
-.logo-name{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(247,244,238,0.5);font-weight:600}
-.badges-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
-.badge-pill{display:flex;align-items:center;gap:8px;padding:9px 18px;background:rgba(247,244,238,0.04);border:1px solid rgba(247,244,238,0.08);border-radius:100px;font-size:13px;font-weight:600;color:rgba(247,244,238,0.6)}
-.badge-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--teal)}
+/* HOW */
+#how{background:var(--off);border-top:1px solid var(--bdr)}
+.hwg{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;margin-top:52px}
+.hs{display:flex;gap:18px;padding:22px 0;border-bottom:1px solid var(--bdr)}
+.hs:last-child{border-bottom:none}
+.hsn{font-family:'Lora',serif;font-style:italic;font-size:38px;font-weight:400;color:var(--teal);line-height:1;flex-shrink:0;width:44px}
+.hsb h4{font-size:15px;font-weight:700;letter-spacing:-.02em;margin-bottom:5px}
+.hsb p{font-size:13.5px;color:var(--mid);line-height:1.65}
+.pw{perspective:1000px;display:flex;justify-content:center}
+.p3{width:232px;height:470px;border-radius:34px;background:var(--ink);border:6px solid #1E1E1C;position:relative;transform:rotateY(-10deg) rotateX(3deg);box-shadow:28px 44px 64px rgba(0,0,0,0.11),0 0 0 1px rgba(0,0,0,0.05);animation:pb 5s ease-in-out infinite}
+.pn2{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:68px;height:4px;background:#111;border-radius:10px}
+.psc{position:absolute;inset:4px;border-radius:28px;background:#F7F4EE;overflow:hidden;display:flex;flex-direction:column}
+.pb2{height:34px;background:white;border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 12px;gap:5px}
+.pd{width:6px;height:6px;border-radius:50%}
+.pct{flex:1;padding:12px 11px;display:flex;flex-direction:column;gap:8px}
+.plb{font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mid);margin-bottom:2px}
+.pcd{background:white;border:1px solid var(--bdr);border-radius:11px;padding:11px}
+.pbg{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:var(--ink)}
+.pb3{height:4px;border-radius:2px;background:var(--bdr);overflow:hidden;margin-top:6px}
+.pf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--tl))}
+.pr{background:white;border:1px solid var(--bdr);border-radius:9px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center}
+.pr span{font-size:10.5px;font-weight:600;color:var(--ink)}
+.pr b{font-size:9.5px;color:var(--teal);font-weight:700}
 
-/* ── CTA ── */
-#cta{padding:140px 6vw;background:var(--ink);text-align:center;position:relative;overflow:hidden}
-#cta::before{content:'';position:absolute;width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(43,158,150,0.08),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
-#cta h2{font-family:'Syne',sans-serif;font-size:clamp(40px,7vw,80px);font-weight:800;letter-spacing:-.05em;line-height:.95;margin-bottom:32px;position:relative}
-#cta h2 em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--teal);font-weight:400}
-#cta p{font-size:18px;color:rgba(247,244,238,0.5);margin-bottom:48px;position:relative}
-.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+/* REC */
+#rec{background:var(--ink);color:white;border-top:none}
+#rec .ey{color:rgba(255,255,255,0.3)}
+#rec .sh{color:white}
+#rec .sh em{color:rgba(43,158,150,0.85)}
+.ls{display:flex;align-items:center;justify-content:center;gap:44px;flex-wrap:wrap;margin-top:52px;margin-bottom:36px}
+.ln{display:flex;flex-direction:column;align-items:center;gap:9px;opacity:.38;filter:brightness(2) grayscale(1);transition:all .3s;cursor:default}
+.ln:hover{opacity:.82;filter:brightness(1) grayscale(0)}
+.ll{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.38);font-weight:500}
+.chs{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+.ch{display:flex;align-items:center;gap:7px;padding:7px 15px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);font-size:12px;font-weight:500;color:rgba(255,255,255,0.52)}
+.chd{width:5px;height:5px;border-radius:50%;background:var(--tl)}
 
-/* ── FOOTER ── */
-footer{padding:48px 6vw;background:var(--ink2);border-top:1px solid rgba(247,244,238,0.06);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px}
-.footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em;color:rgba(247,244,238,0.4)}
-.footer-logo span{color:var(--orange)}
-.footer-note{font-size:12px;color:rgba(247,244,238,0.2);letter-spacing:.05em}
-.footer-links{display:flex;gap:24px}
-.footer-links a{font-size:13px;color:rgba(247,244,238,0.35);text-decoration:none;transition:color .2s}
-.footer-links a:hover{color:var(--teal)}
+/* CTA */
+#cta{background:var(--off);border-top:1px solid var(--bdr);text-align:center;padding:116px 5vw;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(43,158,150,0.065),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+#cta h2{font-family:'Bricolage Grotesque',sans-serif;font-size:clamp(34px,5.5vw,68px);font-weight:800;letter-spacing:-.05em;line-height:.95;margin-bottom:22px;color:var(--ink);position:relative}
+#cta h2 em{font-family:'Lora',serif;font-style:italic;font-weight:500;color:var(--teal)}
+#cta p{font-size:16.5px;color:var(--mid);margin-bottom:38px;position:relative}
+.cb{display:flex;gap:11px;justify-content:center;flex-wrap:wrap;position:relative}
 
-/* ── SCROLL REVEAL ── */
-.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s ease,transform .7s ease}
-.reveal.in{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:.1s}
-.reveal-delay-2{transition-delay:.2s}
-.reveal-delay-3{transition-delay:.3s}
-.reveal-delay-4{transition-delay:.4s}
+/* FOOTER */
+footer{padding:34px 5vw;border-top:1px solid var(--bdr);background:var(--w);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.fl{font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--mid)}
+.fl b{color:var(--org)}
+.fn{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--light);letter-spacing:.07em}
+.fls{display:flex;gap:18px}
+.fls a{font-size:13px;color:var(--mid);text-decoration:none;font-weight:500;transition:color .2s}
+.fls a:hover{color:var(--ink)}
 
-/* ── ANIMATIONS ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes compassIn{from{opacity:0;transform:translateY(40px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes compassSpin{to{transform:rotate(360deg)}}
-@keyframes needleFloat{0%,100%{transform:rotate(0deg)}25%{transform:rotate(4deg)}75%{transform:rotate(-4deg)}}
-@keyframes scrollLine{0%,100%{opacity:0;transform:scaleY(0.3)}50%{opacity:1;transform:scaleY(1)}}
-@keyframes phoneBob{0%,100%{transform:rotateY(-12deg) rotateX(4deg) translateY(0)}50%{transform:rotateY(-12deg) rotateX(4deg) translateY(-10px)}}
-@keyframes pulseDot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:.7}}
-@keyframes bgParticle{0%{transform:translateY(0) rotate(0deg);opacity:0}20%{opacity:.6}80%{opacity:.3}100%{transform:translateY(-100vh) rotate(360deg);opacity:0}}
+/* ANIMS */
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sp{to{transform:rotate(360deg)}}
+@keyframes nw{0%,100%{transform:rotate(0deg)}30%{transform:rotate(5deg)}70%{transform:rotate(-5deg)}}
+@keyframes pb{0%,100%{transform:rotateY(-10deg) rotateX(3deg) translateY(0)}50%{transform:rotateY(-10deg) rotateX(3deg) translateY(-10px)}}
 
-/* ── RESPONSIVE ── */
-@media(max-width:900px){
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .features-track{grid-template-columns:1fr}
-  .how-grid{grid-template-columns:1fr;gap:40px}
-  .phone-wrap{display:none}
-}
-@media(max-width:600px){
-  .logos-row{gap:28px}
-  .logo-img{height:38px}
-  h1{font-size:44px}
-  .stats-grid{grid-template-columns:1fr 1fr}
-}
+@media(max-width:860px){.sg{grid-template-columns:repeat(2,1fr)}.fg{grid-template-columns:1fr}.hwg{grid-template-columns:1fr}.pw{display:none}.nlinks{display:none}}
+@media(max-width:520px){h1{font-size:38px}#cw{width:240px;height:240px}.ls{gap:24px}}
 </style>
 </head>
 <body>
-
-<canvas id="bg-canvas"></canvas>
+<div id="cur"></div>
+<div id="cur-r"></div>
 
 <nav>
-  <a href="/" class="nav-logo">
-    <svg width="26" height="26" viewBox="0 0 100 100" fill="none">
-      <path d="M15 45 Q22 72 50 80 Q28 70 20 50 Z" fill="#2B9E96"/>
-      <path d="M85 45 Q78 72 50 80 Q72 70 80 50 Z" fill="#E8601A"/>
-      <path d="M50 12 L50 78 M37 32 L50 19 L63 32 M37 50 L50 37 L63 50" stroke="#4A9E3A" stroke-width="5.5" stroke-linecap="round"/>
-    </svg>
-    MARG<span>DARSHAK</span>
+  <a href="/" class="nl">
+    <div class="nlm">
+      <svg width="15" height="15" viewBox="0 0 100 100" fill="none">
+        <path d="M50 10L50 76M36 30L50 17L64 30M36 50L50 37L64 50" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M18 48Q24 72 50 80Q30 70 22 52Z" fill="#2B9E96"/>
+        <path d="M82 48Q76 72 50 80Q70 70 78 52Z" fill="#E8601A"/>
+      </svg>
+    </div>
+    MARGDARSHAK
   </a>
-  <div class="nav-cta">
-    <a href="/auth" class="btn btn-ghost" onclick="window.location.href='/auth';return false;">Sign In</a>
-<a href="/auth" class="btn btn-primary" onclick="window.location.href='/auth';return false;">Get Started →</a>
+  <div class="nlinks">
+    <a href="#features">Features</a>
+    <a href="#how">How it works</a>
+    <a href="#rec">Recognition</a>
+  </div>
+  <div class="ncta">
+    <a href="/auth" class="btn btn-g btn-sm">Sign In</a>
+    <a href="/auth" class="btn btn-d btn-sm">Get Started →</a>
   </div>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
-  <div style="max-width:900px;margin:0 auto">
-    <div class="hero-eyebrow">India's AI Career Navigator</div>
-    <h1>Find your<br/><em>direction.</em><br/>Own your <span class="line-orange">career.</span></h1>
-    <p class="hero-sub">Personalised AI guidance built for Indian students and job seekers. Skill scans, 90-day roadmaps, and a mentor that speaks your language.</p>
-    <div class="hero-ctas">
-      <a href="/auth?s=1" class="btn btn-primary btn-hero">Start Free — No credit card</a>
-      <a href="#how" class="btn btn-hero-ghost">See how it works</a>
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div style="position:relative;z-index:2;max-width:840px;margin:0 auto">
+    <div class="htag"><div class="hdot"></div>India's AI Career Navigator</div>
+    <h1>Find your<br/><em>direction.</em><br/>Own your <span class="wa">career.</span></h1>
+    <p class="hsub">Personalised AI guidance for Indian students and job seekers. Skill scans, 90-day roadmaps, and a mentor that speaks your language.</p>
+    <div class="hbtns">
+      <a href="/auth" class="btn btn-d btn-lg">Start Free — No card needed</a>
+      <a href="#how" class="btn btn-g btn-lg">See how it works</a>
     </div>
 
-    <div id="compass-wrap">
-      <div class="compass-ring">
-        <div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:var(--teal)"></div>
-        <div style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:rgba(247,244,238,0.2)"></div>
-        <div style="position:absolute;left:-5px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:rgba(247,244,238,0.2)"></div>
-        <div style="position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:rgba(247,244,238,0.2)"></div>
+    <div id="cw">
+      <div class="cr"></div>
+      <div class="cr cr2"></div>
+      <div class="cr cr3"></div>
+      <div class="ct" style="transform:rotate(0deg)"></div>
+      <div class="ct" style="transform:rotate(45deg)"></div>
+      <div class="ct" style="transform:rotate(90deg)"></div>
+      <div class="ct" style="transform:rotate(135deg)"></div>
+      <div class="ct" style="transform:rotate(180deg)"></div>
+      <div class="ct" style="transform:rotate(225deg)"></div>
+      <div class="ct" style="transform:rotate(270deg)"></div>
+      <div class="ct" style="transform:rotate(315deg)"></div>
+      <div class="cc cc-n">N</div>
+      <div class="cc cc-s">S</div>
+      <div class="cc cc-e">E</div>
+      <div class="cc cc-w">W</div>
+      <div class="cf">
+        <div class="cn"><div class="cnn"></div><div class="cnd"></div><div class="cns"></div></div>
       </div>
-      <div class="compass-ring-2"></div>
-      <div class="compass-ring-3"></div>
-      <!-- Cardinal ticks -->
-      <div class="compass-tick" style="transform:rotate(0deg)"></div>
-      <div class="compass-tick" style="transform:rotate(45deg)"></div>
-      <div class="compass-tick" style="transform:rotate(90deg)"></div>
-      <div class="compass-tick" style="transform:rotate(135deg)"></div>
-      <div class="compass-tick" style="transform:rotate(180deg)"></div>
-      <div class="compass-tick" style="transform:rotate(225deg)"></div>
-      <div class="compass-tick" style="transform:rotate(270deg)"></div>
-      <div class="compass-tick" style="transform:rotate(315deg)"></div>
-      <div class="compass-center">
-        <div class="compass-needle">
-          <div class="needle-n"></div>
-          <div style="width:8px;height:8px;border-radius:50%;background:var(--cream);margin:-2px auto;box-shadow:0 0 10px rgba(43,158,150,0.5)"></div>
-          <div class="needle-s"></div>
-        </div>
-      </div>
-      <!-- N S E W labels -->
-      <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--teal);letter-spacing:.1em">N</div>
-      <div style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:rgba(247,244,238,0.25)">S</div>
-      <div style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:rgba(247,244,238,0.25)">E</div>
-      <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:rgba(247,244,238,0.25)">W</div>
     </div>
-
-    <div class="scroll-hint">
-      <div class="scroll-line"></div>
-      Scroll to explore
-    </div>
+    <div class="si"><div class="sb"></div>Scroll</div>
   </div>
 </section>
 
-<!-- STATS -->
-<section id="stats">
-  <div style="max-width:1100px;margin:0 auto">
-    <div class="section-label reveal">Platform Traction</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end">
+<div id="proof">
+  <div class="pi"><span class="pn">180K+</span>Python jobs in India</div>
+  <div class="ps2"></div>
+  <div class="pi"><span class="pn">90</span>days to career-ready</div>
+  <div class="ps2"></div>
+  <div class="pi"><span class="pn">100%</span>free resources</div>
+  <div class="ps2"></div>
+  <div class="pi"><span class="pn">₹12L</span>avg salary post-roadmap</div>
+</div>
+
+<section id="stats" class="sec">
+  <div class="si2">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:end">
       <div>
-        <h2 class="reveal" style="font-family:'Syne',sans-serif;font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ink)">
-          Helping India's next<br/>generation find their<br/><em style="font-family:'Instrument Serif',serif;font-style:italic;color:var(--teal);font-weight:400">true north.</em>
-        </h2>
+        <div class="ey rv">Platform</div>
+        <h2 class="sh rv d1">Helping India's next<br/>generation find their<br/><em>true north.</em></h2>
       </div>
-      <div class="reveal reveal-delay-2">
-        <p style="font-size:16px;color:var(--muted);line-height:1.75">From first-year students to career switchers — MARGDARSHAK delivers AI-powered career clarity built specifically for India's job market, culture, and aspirations.</p>
-      </div>
+      <p class="rv d2" style="font-size:15px;color:var(--mid);line-height:1.75">From first-year students to career switchers — MARGDARSHAK delivers AI-powered career clarity built for India's job market, culture, and ambitions.</p>
     </div>
-    <div class="stats-grid reveal reveal-delay-3">
-      <div class="stat-box">
-        <div class="stat-num">180<span>K+</span></div>
-        <div class="stat-label">Python jobs in India right now</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num">90</div>
-        <div class="stat-label">Days to career-readiness</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num">100<span>%</span></div>
-        <div class="stat-label">Free NPTEL & Swayam resources</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-num">₹<span>12L</span></div>
-        <div class="stat-label">Avg salary after full roadmap</div>
-      </div>
+    <div class="sg rv d3">
+      <div class="sc"><div class="sn">180<b>K+</b></div><div class="sl">Python jobs in India right now</div></div>
+      <div class="sc"><div class="sn"><em>90</em></div><div class="sl">Days to full career-readiness</div></div>
+      <div class="sc"><div class="sn">100<b>%</b></div><div class="sl">Free NPTEL &amp; Swayam resources</div></div>
+      <div class="sc"><div class="sn"><em>₹12L</em></div><div class="sl">Avg salary after full roadmap</div></div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="features">
-  <div style="max-width:1100px;margin:0 auto">
-    <div class="features-header">
-      <div class="section-label reveal" style="color:var(--teal)">What MARGDARSHAK does</div>
-      <h2 class="reveal reveal-delay-1">Everything you need.<br/><em>Nothing you don't.</em></h2>
-      <p class="reveal reveal-delay-2">Six powerful tools. One platform. All free to start.</p>
-    </div>
-    <div class="features-track">
-      <div class="feat-card reveal">
-        <div class="feat-icon" style="background:rgba(43,158,150,0.12)">🧭</div>
-        <h3>AI Skill Scan</h3>
-        <p>Deep analysis of your background, skills, and career goals. Get a personalised market fit score with real India job data.</p>
-        <div class="feat-tag">+50 XP</div>
-      </div>
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-icon" style="background:rgba(232,96,26,0.12)">🗺️</div>
-        <h3>90-Day Roadmap</h3>
-        <p>Phase-by-phase learning plan with free NPTEL, Swayam, and Coursera resources tailored to your exact career goal.</p>
-        <div class="feat-tag" style="color:var(--orange);border-color:rgba(232,96,26,0.3)">+30 XP</div>
-      </div>
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-icon" style="background:rgba(123,108,246,0.12)">💬</div>
-        <h3>AI Mentor Chat</h3>
-        <p>Ask anything — from salary negotiation to switching careers. India-specific answers, every time. Powered by Gemini AI.</p>
-        <div class="feat-tag" style="color:#7B6CF6;border-color:rgba(123,108,246,0.3)">+5 XP / chat</div>
-      </div>
-      <div class="feat-card reveal">
-        <div class="feat-icon" style="background:rgba(245,200,66,0.12)">📈</div>
-        <h3>Market Intelligence</h3>
-        <p>Live salary trends, top hiring companies, and in-demand skills across IT, FinTech, EdTech, and more in India.</p>
-        <div class="feat-tag" style="color:#B8960A;border-color:rgba(245,200,66,0.3)">Live data</div>
-      </div>
-      <div class="feat-card reveal reveal-delay-1">
-        <div class="feat-icon" style="background:rgba(74,158,58,0.12)">🏆</div>
-        <h3>Badges & XP</h3>
-        <p>Gamified progress tracking. Earn XP for every action, unlock badges, and compete on the national leaderboard.</p>
-        <div class="feat-tag" style="color:var(--green);border-color:rgba(74,158,58,0.3)">200 XP max</div>
-      </div>
-      <div class="feat-card reveal reveal-delay-2">
-        <div class="feat-icon" style="background:rgba(244,114,182,0.12)">🤳</div>
-        <h3>3D Profile</h3>
-        <p>Upload your photo and watch it come alive — your avatar floats, tilts with your cursor, and scrolls with depth.</p>
-        <div class="feat-tag" style="color:#F472B6;border-color:rgba(244,114,182,0.3)">+10 XP</div>
-      </div>
+<section id="features" class="sec" style="background:var(--w)">
+  <div class="si2">
+    <div class="ey rv">What MARGDARSHAK does</div>
+    <h2 class="sh rv d1">Everything you need.<br/><em>Nothing you don't.</em></h2>
+    <p class="rv d2" style="color:var(--mid);font-size:15.5px;margin-top:8px">Six tools. One platform. Free to start.</p>
+    <div class="fg">
+      <div class="fc rv"><div class="fi" style="background:rgba(43,158,150,0.1)">🧭</div><h3>AI Skill Scan</h3><p>Deep analysis of your background and goals. Personalised market fit score with live India job data.</p><div class="fp">+50 XP</div></div>
+      <div class="fc rv d1"><div class="fi" style="background:rgba(200,90,15,0.1)">🗺️</div><h3>90-Day Roadmap</h3><p>Phase-by-phase learning plan with free NPTEL and Swayam resources tailored to your exact goal.</p><div class="fp">+30 XP</div></div>
+      <div class="fc rv d2"><div class="fi" style="background:rgba(100,80,220,0.08)">💬</div><h3>AI Mentor Chat</h3><p>Ask anything — salary, switches, interviews. India-specific answers every time. Powered by Gemini.</p><div class="fp">+5 XP / chat</div></div>
+      <div class="fc rv"><div class="fi" style="background:rgba(200,160,20,0.09)">📈</div><h3>Market Intelligence</h3><p>Salary trends, top hiring companies, in-demand skills across IT, FinTech, EdTech in India.</p><div class="fp">Live data</div></div>
+      <div class="fc rv d1"><div class="fi" style="background:rgba(50,140,50,0.09)">🏆</div><h3>Badges &amp; XP</h3><p>Earn XP for every action. Unlock badges. Compete on the national leaderboard.</p><div class="fp">200 XP max</div></div>
+      <div class="fc rv d2"><div class="fi" style="background:rgba(220,80,160,0.07)">🤳</div><h3>3D Profile</h3><p>Your avatar tilts with your cursor and floats with scroll. Upload once, shine forever.</p><div class="fp">+10 XP</div></div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div style="max-width:1100px;margin:0 auto">
-    <div class="section-label reveal">How it works</div>
-    <div class="how-grid">
+<section id="how" class="sec">
+  <div class="si2">
+    <div class="ey rv">How it works</div>
+    <div class="hwg">
       <div>
-        <h2 class="reveal reveal-delay-1" style="font-family:'Syne',sans-serif;font-size:clamp(30px,4vw,48px);font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:40px;color:var(--ink)">Three steps to<br/><em style="font-family:'Instrument Serif',serif;font-style:italic;color:var(--teal)">clarity.</em></h2>
-        <div class="how-steps">
-          <div class="how-step reveal reveal-delay-1">
-            <div class="step-num">01</div>
-            <div class="step-body">
-              <h4>Tell us about yourself</h4>
-              <p>Share your background, current skills, city, and career goal. Takes 60 seconds.</p>
-            </div>
-          </div>
-          <div class="how-step reveal reveal-delay-2">
-            <div class="step-num">02</div>
-            <div class="step-body">
-              <h4>Get your AI Skill Scan</h4>
-              <p>Our AI analyses India's live job market and gives you a personalised fit score, skill gaps, and top roles to target.</p>
-            </div>
-          </div>
-          <div class="how-step reveal reveal-delay-3">
-            <div class="step-num">03</div>
-            <div class="step-body">
-              <h4>Follow your 90-day plan</h4>
-              <p>Week-by-week tasks with free resources. Chat with your AI mentor anytime. Track progress with XP and badges.</p>
-            </div>
-          </div>
-        </div>
+        <h2 class="sh rv d1" style="margin-bottom:32px">Three steps to<br/><em>clarity.</em></h2>
+        <div class="hs rv d1"><div class="hsn">01</div><div class="hsb"><h4>Tell us about yourself</h4><p>Share your background, skills, city, and goal. Takes 60 seconds.</p></div></div>
+        <div class="hs rv d2"><div class="hsn">02</div><div class="hsb"><h4>Get your AI Skill Scan</h4><p>Our AI analyses India's live job market and gives you a fit score, skill gaps, and top target roles.</p></div></div>
+        <div class="hs rv d3"><div class="hsn">03</div><div class="hsb"><h4>Follow your 90-day plan</h4><p>Week-by-week tasks with free resources. Chat your AI mentor. Track XP and badges.</p></div></div>
       </div>
-      <div class="phone-wrap reveal reveal-delay-2">
-        <div class="phone-3d">
-          <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:80px;height:4px;background:#1A1A18;border-radius:10px"></div>
-          <div class="phone-screen">
-            <div class="phone-status">
-              <div class="phone-dot"></div>
-            </div>
-            <div class="phone-content">
-              <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:rgba(247,244,238,0.3);letter-spacing:.08em;margin-bottom:4px">AI SKILL SCAN</div>
-              <div class="ph-card">
-                <div class="ph-label">Market Fit Score</div>
-                <div class="ph-score">82<span style="font-size:14px;color:rgba(247,244,238,0.3)">/100</span></div>
-                <div class="ph-bar"><div class="ph-fill" style="width:82%"></div></div>
-              </div>
-              <div class="ph-card">
-                <div class="ph-label">Readiness Score</div>
-                <div class="ph-score" style="font-size:18px;color:var(--teal)">68<span style="font-size:12px;color:rgba(247,244,238,0.3)">/100</span></div>
-                <div class="ph-bar"><div class="ph-fill" style="width:68%;background:linear-gradient(90deg,var(--teal),#2B9E96)"></div></div>
-              </div>
-              <div style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:rgba(247,244,238,0.3);letter-spacing:.08em;margin-top:4px">TOP ROLES</div>
-              <div style="display:flex;flex-direction:column;gap:6px">
-                <div class="ph-card" style="padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-size:12px;font-weight:600;color:rgba(247,244,238,0.7)">Data Analyst</span>
-                  <span style="font-size:11px;color:var(--teal);font-weight:700">82%</span>
-                </div>
-                <div class="ph-card" style="padding:10px 12px;display:flex;justify-content:space-between;align-items:center">
-                  <span style="font-size:12px;font-weight:600;color:rgba(247,244,238,0.7)">Biz Analyst</span>
-                  <span style="font-size:11px;color:var(--orange);font-weight:700">76%</span>
-                </div>
-              </div>
-              <div style="margin-top:auto;padding:12px;background:linear-gradient(135deg,rgba(43,158,150,0.15),rgba(232,96,26,0.08));border-radius:12px;border:1px solid rgba(43,158,150,0.2)">
-                <div style="font-size:10px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:4px">SALARY IN 12 MONTHS</div>
-                <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--cream)">₹6–12 LPA</div>
-              </div>
+      <div class="pw rv d2">
+        <div class="p3">
+          <div class="pn2"></div>
+          <div class="psc">
+            <div class="pb2"><div class="pd" style="background:#E8601A"></div><div class="pd" style="background:#F5C842"></div><div class="pd" style="background:#4A9E3A"></div></div>
+            <div class="pct">
+              <div class="plb">AI Skill Scan</div>
+              <div class="pcd"><div class="plb">Market Fit Score</div><div class="pbg">82<span style="font-size:13px;color:var(--mid)">/100</span></div><div class="pb3"><div class="pf" style="width:82%"></div></div></div>
+              <div class="pcd"><div class="plb">Readiness</div><div class="pbg" style="font-size:17px;color:var(--teal)">68<span style="font-size:11px;color:var(--mid)">/100</span></div><div class="pb3"><div class="pf" style="width:68%"></div></div></div>
+              <div class="plb">Top Roles</div>
+              <div class="pr"><span>Data Analyst</span><b>82%</b></div>
+              <div class="pr"><span>Biz Analyst</span><b style="color:var(--org)">76%</b></div>
+              <div style="margin-top:auto;background:linear-gradient(135deg,rgba(43,158,150,0.07),rgba(200,90,15,0.04));border:1px solid var(--bdr);border-radius:10px;padding:10px"><div class="plb">Salary in 12 months</div><div style="font-family:'Bricolage Grotesque',sans-serif;font-size:14px;font-weight:800;color:var(--ink)">₹6–12 LPA</div></div>
             </div>
           </div>
         </div>
@@ -407,235 +315,137 @@ footer{padding:48px 6vw;background:var(--ink2);border-top:1px solid rgba(247,244
   </div>
 </section>
 
-<!-- RECOGNITIONS -->
-<section id="recognitions">
-  <div style="max-width:1000px;margin:0 auto">
-    <div class="rec-header reveal">
-      <div class="section-label" style="color:var(--teal);margin-bottom:12px">Recognised by</div>
-      <h2>Built with India's best institutions</h2>
-      <p>Semi-finalist and showcase at India's top engineering and AI competitions</p>
-    </div>
-
-    <div class="logos-row">
-      <!-- AWS -->
-      <div class="logo-item reveal">
-        <svg width="72" height="44" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M70 52 C68 45 62 40 54 40 C42 40 34 52 34 66 C34 78 42 88 54 88 C62 88 68 83 71 76" stroke="#FF9900" stroke-width="7" stroke-linecap="round" fill="none"/>
-          <path d="M90 40 L82 88 M82 88 L76 60 M76 60 L70 88 M70 88 L62 40" stroke="#FF9900" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <path d="M110 40 C108 40 105 42 105 52 C105 64 108 68 114 68 C118 68 120 65 120 60 C120 52 116 40 110 40 Z M105 68 C105 76 108 88 116 88 C120 88 123 85 124 80" stroke="#FF9900" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <path d="M36 100 C60 112 140 112 164 100" stroke="#FF9900" stroke-width="5" stroke-linecap="round" fill="none"/>
-          <path d="M164 100 L156 95" stroke="#FF9900" stroke-width="5" stroke-linecap="round"/>
-        </svg>
-        <div class="logo-name">AWS 10,000 AIdeas</div>
+<section id="rec" class="sec">
+  <div class="si2">
+    <div class="ey rv">Recognition</div>
+    <h2 class="sh rv d1" style="margin-bottom:8px">Built with India's<br/>best <em>institutions.</em></h2>
+    <p class="rv d2" style="color:rgba(255,255,255,0.35);font-size:15px;margin-top:8px">Top-rank at India's premier engineering and AI competitions.</p>
+    <div class="ls">
+      <div class="ln rv">
+        <svg width="66" height="40" viewBox="0 0 200 122" fill="none"><path d="M68 54C66 47 60 42 52 42C40 42 32 54 32 68C32 80 40 90 52 90C60 90 66 85 69 78" stroke="#FF9900" stroke-width="8" stroke-linecap="round" fill="none"/><path d="M88 42L80 90M80 90L74 62M74 62L68 90M68 90L60 42" stroke="#FF9900" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M108 42C106 42 103 44 103 54C103 66 106 70 112 70C116 70 118 67 118 62C118 54 114 42 108 42ZM103 70C103 78 106 90 114 90C118 90 121 87 122 82" stroke="#FF9900" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M34 105C58 117 142 117 166 105" stroke="#FF9900" stroke-width="5.5" stroke-linecap="round" fill="none"/><path d="M166 105L158 100" stroke="#FF9900" stroke-width="5.5" stroke-linecap="round"/></svg>
+        <div class="ll">AWS 10,000 AIdeas</div>
       </div>
-
-      <!-- MNIT Jaipur -->
-      <div class="logo-item reveal reveal-delay-1">
-        <svg width="52" height="52" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="46" stroke="#1565C0" stroke-width="4" fill="none"/>
-          <circle cx="50" cy="50" r="36" stroke="#1565C0" stroke-width="2" fill="none"/>
-          <rect x="36" y="52" width="28" height="20" stroke="#B8860B" stroke-width="2.5" fill="none"/>
-          <line x1="50" y1="30" x2="50" y2="52" stroke="#B8860B" stroke-width="3"/>
-          <path d="M44 30 L50 22 L56 30" fill="#B8860B"/>
-          <line x1="44" y1="22" x2="44" y2="35" stroke="#B8860B" stroke-width="2"/>
-          <line x1="56" y1="22" x2="56" y2="35" stroke="#B8860B" stroke-width="2"/>
-          <line x1="36" y1="52" x2="64" y2="52" stroke="#B8860B" stroke-width="2.5"/>
-        </svg>
-        <div class="logo-name">MNIT Jaipur · RAMP 1.0</div>
+      <div class="ln rv d1">
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="#1565C0" stroke-width="4.5" fill="none"/><circle cx="50" cy="50" r="34" stroke="#1565C0" stroke-width="2" fill="none"/><rect x="36" y="54" width="28" height="19" stroke="#B8860B" stroke-width="3" fill="none"/><line x1="50" y1="32" x2="50" y2="54" stroke="#B8860B" stroke-width="3.5"/><path d="M43 32L50 23L57 32" fill="#B8860B"/><line x1="43" y1="23" x2="43" y2="36" stroke="#B8860B" stroke-width="2.5"/><line x1="57" y1="23" x2="57" y2="36" stroke="#B8860B" stroke-width="2.5"/></svg>
+        <div class="ll">MNIT Jaipur · RAMP 1.0</div>
       </div>
-
-      <!-- IIT Delhi -->
-      <div class="logo-item reveal reveal-delay-2">
-        <svg width="52" height="52" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="46" stroke="#C62828" stroke-width="4" fill="none"/>
-          <circle cx="50" cy="50" r="36" stroke="#C62828" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
-          <circle cx="50" cy="50" r="22" stroke="#C62828" stroke-width="3" fill="none"/>
-          <circle cx="50" cy="50" r="8" stroke="#C62828" stroke-width="2" fill="none"/>
-          <path d="M50 28 L54 36 L62 38 L56 44 L58 52 L50 48 L42 52 L44 44 L38 38 L46 36 Z" stroke="#C62828" stroke-width="1.5" fill="none"/>
-          <line x1="50" y1="14" x2="50" y2="28" stroke="#C62828" stroke-width="3"/>
-          <line x1="50" y1="72" x2="50" y2="86" stroke="#C62828" stroke-width="3"/>
-          <line x1="14" y1="50" x2="28" y2="50" stroke="#C62828" stroke-width="3"/>
-          <line x1="72" y1="50" x2="86" y2="50" stroke="#C62828" stroke-width="3"/>
-        </svg>
-        <div class="logo-name">IIT Delhi · BECon</div>
+      <div class="ln rv d2">
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="#C62828" stroke-width="4.5" fill="none"/><circle cx="50" cy="50" r="34" stroke="#C62828" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/><circle cx="50" cy="50" r="20" stroke="#C62828" stroke-width="3" fill="none"/><circle cx="50" cy="50" r="7" stroke="#C62828" stroke-width="2" fill="none"/><line x1="50" y1="14" x2="50" y2="30" stroke="#C62828" stroke-width="3.5"/><line x1="50" y1="70" x2="50" y2="86" stroke="#C62828" stroke-width="3.5"/><line x1="14" y1="50" x2="30" y2="50" stroke="#C62828" stroke-width="3.5"/><line x1="70" y1="50" x2="86" y2="50" stroke="#C62828" stroke-width="3.5"/></svg>
+        <div class="ll">IIT Delhi · BECon</div>
       </div>
-
-      <!-- IIT Jodhpur -->
-      <div class="logo-item reveal reveal-delay-3">
-        <svg width="52" height="52" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="46" stroke="#1A237E" stroke-width="4" fill="none"/>
-          <circle cx="50" cy="50" r="36" stroke="#1A237E" stroke-width="1.5" fill="none"/>
-          <!-- compass rose / circuit pattern -->
-          <path d="M50 20 L50 80 M20 50 L80 50" stroke="#FF8F00" stroke-width="2.5" stroke-linecap="round"/>
-          <path d="M29 29 L71 71 M71 29 L29 71" stroke="#1A237E" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 4"/>
-          <circle cx="50" cy="50" r="10" stroke="#FF8F00" stroke-width="2.5" fill="none"/>
-          <circle cx="50" cy="50" r="4" fill="#FF8F00"/>
-          <circle cx="50" cy="20" r="3" fill="#FF8F00"/>
-          <circle cx="50" cy="80" r="3" fill="#1A237E"/>
-          <circle cx="20" cy="50" r="3" fill="#1A237E"/>
-          <circle cx="80" cy="50" r="3" fill="#1A237E"/>
-        </svg>
-        <div class="logo-name">IIT Jodhpur · NSH 2026</div>
+      <div class="ln rv d3">
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="#1A237E" stroke-width="4.5" fill="none"/><circle cx="50" cy="50" r="34" stroke="#1A237E" stroke-width="1.5" fill="none"/><path d="M50 18L50 82M18 50L82 50" stroke="#FF8F00" stroke-width="3" stroke-linecap="round"/><circle cx="50" cy="50" r="11" stroke="#FF8F00" stroke-width="3" fill="none"/><circle cx="50" cy="50" r="4" fill="#FF8F00"/><circle cx="50" cy="18" r="3.5" fill="#FF8F00"/></svg>
+        <div class="ll">IIT Jodhpur · NSH 2026</div>
       </div>
-
-      <!-- MHA / SHIELD -->
-      <div class="logo-item reveal reveal-delay-4">
-        <svg width="52" height="52" viewBox="0 0 100 100" fill="none">
-          <path d="M50 8 L88 24 L88 52 C88 72 70 88 50 92 C30 88 12 72 12 52 L12 24 Z" stroke="#1B5E20" stroke-width="4" fill="none"/>
-          <path d="M50 20 L76 32 L76 52 C76 66 64 78 50 82 C36 78 24 66 24 52 L24 32 Z" stroke="#1B5E20" stroke-width="2" fill="none"/>
-          <path d="M38 50 L46 58 L62 42" stroke="#1B5E20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        <div class="logo-name">MHA · SHIELD 1.0 Finalist</div>
+      <div class="ln rv d4">
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none"><path d="M50 8L88 24L88 52C88 72 70 88 50 92C30 88 12 72 12 52L12 24Z" stroke="#1B5E20" stroke-width="4.5" fill="none"/><path d="M50 20L76 32L76 52C76 66 64 78 50 82C36 78 24 66 24 52L24 32Z" stroke="#1B5E20" stroke-width="2" fill="none"/><path d="M37 50L46 59L63 42" stroke="#1B5E20" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <div class="ll">MHA · SHIELD 1.0</div>
       </div>
     </div>
-
-    <div class="badges-row reveal">
-      <div class="badge-pill"><div class="dot"></div>AWS 10,000 AIdeas Semi-Finalist</div>
-      <div class="badge-pill"><div class="dot" style="background:var(--orange)"></div>SHIELD 1.0 — Top 8 of 533+ Teams</div>
-      <div class="badge-pill"><div class="dot" style="background:#7B6CF6"></div>RAMP 1.0 — 3rd Place National</div>
-      <div class="badge-pill"><div class="dot" style="background:#F5C842"></div>IIT Delhi BECon Blueprint 6.0 — Top 8</div>
+    <div class="chs rv">
+      <div class="ch"><div class="chd"></div>AWS AIdeas Semi-Finalist</div>
+      <div class="ch"><div class="chd" style="background:#E8601A"></div>SHIELD 1.0 — Top 8 / 533+ Teams</div>
+      <div class="ch"><div class="chd" style="background:#7B6CF6"></div>RAMP 1.0 — 3rd Place National</div>
+      <div class="ch"><div class="chd" style="background:#F5C842"></div>IIT Delhi BECon — Top 8</div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
 <section id="cta">
-  <div style="max-width:800px;margin:0 auto">
-    <h2 class="reveal">Your career<br/>has a <em>true north.</em></h2>
-    <p class="reveal reveal-delay-1">Join thousands of Indian students using MARGDARSHAK to navigate their future. Free to start. No credit card needed.</p>
-    <div class="cta-btns reveal reveal-delay-2">
-      <a href="/auth?s=1" class="btn btn-primary btn-hero">Start Your Journey Free →</a>
-      <a href="/auth" class="btn btn-hero-ghost">I already have an account</a>
+  <div style="max-width:680px;margin:0 auto;position:relative">
+    <div class="ey rv" style="justify-content:center;display:flex">Get started</div>
+    <h2 class="rv d1">Your career has a<br/><em>true north.</em></h2>
+    <p class="rv d2">Join thousands of Indian students using MARGDARSHAK to navigate their future. Free. No credit card. No catch.</p>
+    <div class="cb rv d3">
+      <a href="/auth" class="btn btn-d btn-lg">Start Your Journey Free →</a>
+      <a href="/auth" class="btn btn-g btn-lg">I have an account</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-logo">MARG<span>DARSHAK</span></div>
-  <div class="footer-note">Built at JECRC Foundation, Jaipur · AgniBytes Team</div>
-  <div class="footer-links">
-    <a href="/auth?s=1">Sign Up</a>
-    <a href="/auth">Log In</a>
-    <a href="#how">How It Works</a>
-  </div>
+  <div class="fl">MARG<b>DARSHAK</b></div>
+  <div class="fn">JECRC FOUNDATION, JAIPUR · AGNIBYTES</div>
+  <div class="fls"><a href="/auth">Sign Up</a><a href="/auth">Log In</a><a href="#how">How It Works</a></div>
 </footer>
 
 <script>
-// ── Animated particle background canvas ─────────────────────────────────────
-(function(){
-  const c = document.getElementById('bg-canvas');
-  const ctx = c.getContext('2d');
-  let W, H, particles = [];
-  function resize(){ W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
-  resize();
-  window.addEventListener('resize', resize);
+// CURSOR
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-r');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+document.addEventListener('mouseleave',()=>{cur.style.opacity='0';ring.style.opacity='0'});
+document.addEventListener('mouseenter',()=>{cur.style.opacity='1';ring.style.opacity='1'});
+(function anim(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;cur.style.left=mx+'px';cur.style.top=my+'px';ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim)})();
 
-  function Particle(){
-    this.reset = function(){
-      this.x = Math.random() * W;
-      this.y = H + 20;
-      this.size = Math.random() * 1.5 + 0.3;
-      this.speed = Math.random() * 0.4 + 0.1;
-      this.opacity = Math.random() * 0.5 + 0.1;
-      this.color = Math.random() > 0.5 ? '43,158,150' : '232,96,26';
-      this.drift = (Math.random() - 0.5) * 0.3;
-    };
-    this.reset();
-    this.y = Math.random() * H;
+// RAY BURST ON CLICK
+document.addEventListener('click',e=>{
+  const ns='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(ns,'svg');
+  svg.setAttribute('width','130');svg.setAttribute('height','130');svg.setAttribute('viewBox','-65 -65 130 130');
+  svg.style.cssText=`position:fixed;left:${e.clientX}px;top:${e.clientY}px;pointer-events:none;z-index:99997;transform:translate(-50%,-50%)`;
+  const c=document.createElementNS(ns,'circle');
+  c.setAttribute('cx','0');c.setAttribute('cy','0');c.setAttribute('r','0');
+  c.setAttribute('fill','none');c.setAttribute('stroke','#1E7A74');c.setAttribute('stroke-width','1.5');
+  c.style.animation='rayExpand .5s cubic-bezier(.2,1,.4,1) forwards';
+  svg.appendChild(c);
+  for(let i=0;i<8;i++){
+    const a=(i/8)*Math.PI*2,cos=Math.cos(a),sin=Math.sin(a);
+    const len=16+Math.random()*22,s2=9,e2=s2+len;
+    const l=document.createElementNS(ns,'line');
+    l.setAttribute('x1',cos*s2);l.setAttribute('y1',sin*s2);
+    l.setAttribute('x2',cos*e2);l.setAttribute('y2',sin*e2);
+    l.setAttribute('stroke',i%2===0?'#1E7A74':'#C85A0F');
+    l.setAttribute('stroke-width','1.5');l.setAttribute('stroke-linecap','round');
+    l.setAttribute('stroke-dasharray',len);l.setAttribute('stroke-dashoffset','0');
+    l.style.animation=`rayLine ${.38+Math.random()*.18}s cubic-bezier(.2,1,.4,1) forwards`;
+    svg.appendChild(l);
   }
+  document.body.appendChild(svg);
+  setTimeout(()=>svg.remove(),650);
+});
 
-  for(let i=0;i<80;i++) particles.push(new Particle());
+// SCROLL REVEAL
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(p => {
-      p.y -= p.speed;
-      p.x += p.drift;
-      p.opacity += (Math.random()-0.5)*0.01;
-      p.opacity = Math.max(0.05, Math.min(0.6, p.opacity));
-      if(p.y < -10) p.reset();
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-      ctx.fillStyle = `rgba(${p.color},${p.opacity})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
+// COMPASS SCROLL
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY,cw=document.getElementById('cw');
+  if(!cw)return;
+  cw.style.transform=`rotateY(${s*.06}deg) rotateX(${s*.02}deg) scale(${Math.max(.88,1-s*.00033)})`;
+  cw.style.opacity=Math.max(0,1-s*.0024);
+},{passive:true});
 
-// ── Scroll reveal ────────────────────────────────────────────────────────────
-const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-}, { threshold: 0.12 });
-revealEls.forEach(el => io.observe(el));
-
-// ── 3D Parallax on feature cards ─────────────────────────────────────────────
-document.querySelectorAll('.feat-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width) * 100;
-    const y = ((e.clientY - r.top) / r.height) * 100;
-    card.style.setProperty('--mx', x + '%');
-    card.style.setProperty('--my', y + '%');
+// FEATURE CARD GLOW
+document.querySelectorAll('.fc').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
   });
 });
 
-// ── Scroll-based compass rotation ─────────────────────────────────────────────
-window.addEventListener('scroll', () => {
-  const scrolled = window.scrollY;
-  const compassWrap = document.getElementById('compass-wrap');
-  if(compassWrap) {
-    const rot = scrolled * 0.15;
-    const scale = Math.max(0.85, 1 - scrolled * 0.0004);
-    const opacity = Math.max(0, 1 - scrolled * 0.003);
-    compassWrap.style.transform = `rotateY(${rot * 0.5}deg) rotateX(${rot * 0.2}deg) scale(${scale})`;
-    compassWrap.style.opacity = opacity;
-  }
-}, { passive: true });
+// NAV SCROLL
+window.addEventListener('scroll',()=>{
+  document.querySelector('nav').style.borderBottomColor=window.scrollY>20?'var(--bdr)':'rgba(232,230,225,0.5)';
+},{passive:true});
 
-// ── Smooth nav background on scroll ──────────────────────────────────────────
-const navEl = document.querySelector('nav');
-window.addEventListener('scroll', () => {
-  if(window.scrollY > 60){
-    navEl.style.background = 'rgba(10,10,8,0.92)';
-    navEl.style.backdropFilter = 'blur(20px)';
-    navEl.style.borderBottom = '1px solid rgba(247,244,238,0.06)';
-  } else {
-    navEl.style.background = '';
-    navEl.style.backdropFilter = '';
-    navEl.style.borderBottom = '';
+// STAT COUNTERS
+let counted=false;
+new IntersectionObserver(es=>{
+  if(!es[0].isIntersecting||counted)return;counted=true;
+  const cells=document.querySelectorAll('.sn');
+  function cnt(el,to,sfx,pfx){
+    const dur=1600,t0=performance.now();
+    const run=now=>{const p=Math.min((now-t0)/dur,1),e=1-Math.pow(1-p,3);el.innerHTML=(pfx||'')+Math.floor(e*to)+(sfx||'');if(p<1)requestAnimationFrame(run)};
+    requestAnimationFrame(run);
   }
-}, { passive: true });
-
-// ── Counter animation on stats ───────────────────────────────────────────────
-function animateCounter(el, target, suffix, prefix){
-  let start = 0;
-  const duration = 1800;
-  const startTime = performance.now();
-  function step(now){
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const current = Math.floor(eased * target);
-    el.innerHTML = (prefix||'') + current + (suffix||'');
-    if(progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-const statsSection = document.getElementById('stats');
-const statsObserver = new IntersectionObserver((entries) => {
-  if(entries[0].isIntersecting){
-    const nums = statsSection.querySelectorAll('.stat-num');
-    animateCounter(nums[0], 180, '<span>K+</span>');
-    animateCounter(nums[1], 90, '');
-    animateCounter(nums[2], 100, '<span>%</span>');
-    nums[3].innerHTML = '₹<span>12L</span>';
-    statsObserver.disconnect();
-  }
-}, { threshold: 0.4 });
-statsObserver.observe(statsSection);
+  cnt(cells[0],180,'<b>K+</b>');
+  cells[1].innerHTML='<em>90</em>';
+  cnt(cells[2],100,'<b>%</b>');
+  cells[3].innerHTML='<em>₹12L</em>';
+},{threshold:.4}).observe(document.getElementById('stats'));
 </script>
 </body>
 </html>
