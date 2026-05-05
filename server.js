@@ -290,18 +290,20 @@ app.get('/api/status', (req, res) => res.json({ ok: true, aiMode: HAS_KEY ? 'gem
 
 // ─── Serve React build ────────────────────────────────────────────────────────
 const BUILD = path.join(__dirname, 'app', 'build');
-app.use(express.static(BUILD));
+const LANDING = path.join(__dirname, 'index.html');
+
+// Landing page FIRST — before React static, so / always shows landing
 app.get('/', (req, res) => {
-  const lp = path.join(__dirname, 'index.html');
-  if (fs.existsSync(lp)) return res.sendFile(lp);
+  if (fs.existsSync(LANDING)) return res.sendFile(LANDING);
   res.sendFile(path.join(BUILD, 'index.html'));
 });
+
+// React static files (js/css/media) — only after landing route is registered
+app.use(express.static(BUILD));
+
+// React app routes — these serve React's index.html (NOT the landing page)
 ['/auth', '/dashboard', '/analyze', '/roadmap', '/market', '/chat', '/badges', '/profile'].forEach(r =>
-  app.get(r, (req, res) => {
-    const lp = path.join(__dirname, 'index.html');
-    if (fs.existsSync(lp)) return res.sendFile(lp);
-    res.sendFile(path.join(BUILD, 'index.html'));
-  })
+  app.get(r, (req, res) => res.sendFile(path.join(BUILD, 'index.html')))
 );
 
 const PORT = process.env.PORT || 3001;
