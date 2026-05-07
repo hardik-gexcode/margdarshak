@@ -18,7 +18,8 @@ app.use('/uploads', express.static(UPLOAD));
 let db;
 try {
   const Database = require('better-sqlite3');
-  db = new Database(path.join(__dirname, 'margdarshak.db'));
+  const DB_PATH = process.env.DB_PATH || path.join(__dirname, 'margdarshak.db');
+db = new Database(DB_PATH);
   db.pragma('journal_mode = WAL');
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
